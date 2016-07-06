@@ -31,7 +31,7 @@ public class Project1IT extends InvokeMainTestCase {
 
   @Test
   public void testIncorrectDateNotAccepted () {
-    MainMethodResult result = invokeMain("EazyE", "A stupid meeting", "13:00", "14:00");
+    MainMethodResult result = invokeMain("EazyE", "A stupid meeting", "01-01-1111", "13:00", "01-01-1111", "14:00");
     assertThat(result.getExitCode(), equalTo(1));
     assertThat(result.getErr().trim(), equalTo(Project1.DATE_WRONG_ERROR));
   }
@@ -39,7 +39,7 @@ public class Project1IT extends InvokeMainTestCase {
   @Test
   public void testReadmeOptionOnlyPrintsReadme() {
     MainMethodResult result = invokeMain("-readme", "Triple Entente",
-            "Armistice Agreement Meeting", "11/11/1918 11:11", "11/11/1918 12:11");
+            "Armistice Agreement Meeting", "11/11/1918", "11:11", "11/11/1918", "12:11");
     assertThat(result.getExitCode(), equalTo(0));
     // Trimming the result is needed as we use println instead of print
     assertThat(result.getOut().trim(), equalTo(Project1.README));
@@ -49,7 +49,7 @@ public class Project1IT extends InvokeMainTestCase {
   @Test
   public void testPrintOptionPrintsDescription() {
     MainMethodResult result = invokeMain("-print", "Triple Entente",
-            "Armistice Agreement Meeting", "11/11/1918 11:11", "11/11/1918 12:11");
+            "Armistice Agreement Meeting", "11/11/1918", "11:11", "11/11/1918", "12:11");
     assertThat(result.getOut(), containsString("Armistice Agreement Meeting from 11/11/1918 11:11 until 11/11/1918 12:11"));
   }
 
