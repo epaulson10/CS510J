@@ -37,4 +37,26 @@ public class Appointment extends AbstractAppointment {
   public String getDescription() {
     return description;
   }
+
+  /**
+   * Checks for equality between two appointments by comparing the description, start time, and end time strings
+   * for equality.
+   *
+   * @param appointment The appointment to compare this appointment to
+   * @return true if the appointments are equal, false otherwise.
+     */
+  public boolean equals(Appointment appointment) {
+    if (null == appointment) {
+      return false;
+    }
+
+    if (this.beginTime.equals(appointment.beginTime)
+            && this.endTime.equals(appointment.endTime)
+            && this.description.equals(appointment.description)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
 }
