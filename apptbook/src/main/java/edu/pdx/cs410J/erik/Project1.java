@@ -42,8 +42,8 @@ public class Project1 {
     for (int i = 0; i < NUM_OPTIONS; i++) {
       String argument = argList.get(0);
 
-      // If -readme is passed, only print the README and do no more
-      if (argument.equals("-readme")) {
+      // If -README is passed, only print the README and do no more
+      if (argument.equals("-README")) {
         System.out.println(README);
         System.exit(0);
       }

@@ -38,7 +38,7 @@ public class Project1IT extends InvokeMainTestCase {
 
   @Test
   public void testReadmeOptionOnlyPrintsReadme() {
-    MainMethodResult result = invokeMain("-readme", "Triple Entente",
+    MainMethodResult result = invokeMain("-README", "Triple Entente",
             "Armistice Agreement Meeting", "11/11/1918", "11:11", "11/11/1918", "12:11");
     assertThat(result.getExitCode(), equalTo(0));
     // Trimming the result is needed as we use println instead of print
