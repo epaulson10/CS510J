@@ -52,7 +52,7 @@ public class Project1IT extends InvokeMainTestCase {
             "Armistice Agreement Meeting", "11/11/1918", "11:11", "11/11/1918", "12:11");
     assertThat(result.getExitCode(), equalTo(0));
     // Trimming the result is needed as we use println instead of print
-    assertThat(result.getOut().trim(), equalTo(Project2.README));
+    assertThat(result.getOut().trim(), containsString(Project2.README));
 
   }
 

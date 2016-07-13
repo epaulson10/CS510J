@@ -4,59 +4,72 @@ import edu.pdx.cs410J.AbstractAppointment;
 
 public class Appointment extends AbstractAppointment {
 
-  private String description;
-  private String beginTime;
-  private String endTime;
+    private String description;
+    private String beginTime;
+    private String endTime;
 
-  /**
-   * Constructor for an Appointment
-   *
-   * @param description The description for this Appointment
-   * @param beginTime The start time for this appointment in 24-hour time (example: 7/15/2016 14:39)
-   * @param endTime The end time for this appointment in 24-hour time (example: example: 7/15/2016 14:39)
+    /**
+     * Constructor for an Appointment
+     *
+     * @param description The description for this Appointment
+     * @param beginTime   The start time for this appointment in 24-hour time (example: 7/15/2016 14:39)
+     * @param endTime     The end time for this appointment in 24-hour time (example: example: 7/15/2016 14:39)
      */
-  public Appointment(String description, String beginTime, String endTime) {
-    this.description = description;
-    this.beginTime = beginTime;
-    this.endTime = endTime;
-  }
+    public Appointment(String description, String beginTime, String endTime) {
+        this.description = description;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+    }
 
 
-
-  @Override
-  public String getBeginTimeString() {
-    return beginTime;
-  }
-
-  @Override
-  public String getEndTimeString() {
-    return endTime;
-  }
-
-  @Override
-  public String getDescription() {
-    return description;
-  }
-
-  /**
-   * Checks for equality between two appointments by comparing the description, start time, and end time strings
-   * for equality.
-   *
-   * @param appointment The appointment to compare this appointment to
-   * @return true if the appointments are equal, false otherwise.
+    /**
+     * Getter for the beginning time string.
+     *
+     * @return A string representing the begin time
      */
-  public boolean equals(Appointment appointment) {
-    if (null == appointment) {
-      return false;
+    @Override
+    public String getBeginTimeString() {
+        return beginTime;
     }
 
-    if (this.beginTime.equals(appointment.beginTime)
-            && this.endTime.equals(appointment.endTime)
-            && this.description.equals(appointment.description)) {
-      return true;
+    /**
+     * Getter for the end time string.
+     *
+     * @return A string representing the end time
+     */
+    @Override
+    public String getEndTimeString() {
+        return endTime;
     }
-    else {
-      return false;
+
+    /**
+     * Getter for the description string.
+     *
+     * @return A string representing the description for this Appointment
+     */
+    @Override
+    public String getDescription() {
+        return description;
     }
-  }
+
+    /**
+     * Checks for equality between two appointments by comparing the description, start time, and end time strings
+     * for equality.
+     *
+     * @param appointment The appointment to compare this appointment to
+     * @return true if the appointments are equal, false otherwise.
+     */
+    public boolean equals(Appointment appointment) {
+        if (null == appointment) {
+            return false;
+        }
+
+        if (this.beginTime.equals(appointment.beginTime)
+                && this.endTime.equals(appointment.endTime)
+                && this.description.equals(appointment.description)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
