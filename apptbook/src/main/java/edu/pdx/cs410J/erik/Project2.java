@@ -111,6 +111,12 @@ public class Project2 {
         } else {
             book = new AppointmentBook(owner);
         }
+
+        // It is a requirement that the name of the owner on the command line matches that in the file.
+        if (!book.getOwnerName().equals(owner)) {
+            System.err.println("Owner name doesn't match the owner name in the text file.");
+            System.exit(1);
+        }
         // Create an AppointmentBook and Appointment based off of the command line arguments
         Appointment appointment = new Appointment(description, startDateAndTime, endDateAndTime);
         book.addAppointment(appointment);
