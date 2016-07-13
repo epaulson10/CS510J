@@ -1,7 +1,10 @@
 package edu.pdx.cs410J.erik;
 
 import edu.pdx.cs410J.AbstractAppointmentBook;
+import edu.pdx.cs410J.ParserException;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,25 +13,27 @@ import java.util.Arrays;
 /**
  * The main class for the CS410J appointment book Project
  */
-public class Project1 {
+public class Project2 {
   public static final String README = "By: Erik Paulson\n" +
-          "CS410J Project 1: Designing an Appointment Book Application \n" +
-          "A simple command line program that creates an AppointmentBook and Appointment with the given command line arguments.";
+          "CS410J Project 2: Storing an Appointment Book in a Text File \n" +
+          "Command line program that creates an AppointmentBook and Appointment with the given command line arguments.\n" +
+          "The user may specify a text file as an option to store the appointment book from disk or load it.";
 
   public static final String DATE_WRONG_ERROR = "Date is not in 24-hour format: mm/dd/yyyy hh:mm";
 
   // I like to save memory whenever I can
-  private final static byte NUM_OPTIONS = 2;
+  private final static byte NUM_OPTIONS = 3;
 
 
   /**
-   * The main entry point for the Project1 applicaiton
+   * The main entry point for the Project2 application
    *
    * @param args Command line arguments
    */
   public static void main(String[] args) {
     Class c = AbstractAppointmentBook.class;  // Refer to one of Dave's classes so that we can be sure it is on the classpath
     boolean printDescription = false;
+    String textFile = null;
 
     if (args.length == 0) {
       System.err.println("Missing command line arguments");
@@ -53,6 +58,18 @@ public class Project1 {
         printDescription = true;
         // Remove the options from the list to make parsing arguments easier
         argList.remove("-print");
+      }
+      else if (argument.equals("-textFile")) {
+        try {
+          textFile = argList.get(1);
+        } catch (IndexOutOfBoundsException e) {
+          System.err.println("The name of a textFile must follow the -textFile option.");
+          System.exit(1);
+        }
+
+        // remove() shifts the elements to the left, so calling this twice pops -textFile and the given filename
+        argList.remove(0);
+        argList.remove(0);
       }
     }
 
@@ -84,13 +101,35 @@ public class Project1 {
       System.exit(1);
     }
 
+    AppointmentBook book = null;
+    if (textFile != null && (new File(textFile).exists())) {
+      TextParser parser = new TextParser(textFile);
+      try {
+        book = (AppointmentBook)parser.parse();
+      } catch(ParserException e) {
+        System.err.println("Caught exception trying to parse text file: " + e.getMessage());
+        System.exit(1);
+      }
+    }
+    else {
+      book = new AppointmentBook(owner);
+    }
     // Create an AppointmentBook and Appointment based off of the command line arguments
-    AppointmentBook book = new AppointmentBook(owner);
     Appointment appointment = new Appointment(description, startDateAndTime, endDateAndTime);
     book.addAppointment(appointment);
 
     if (printDescription) {
       System.out.println(appointment.toString());
+    }
+
+    if (textFile != null) {
+      TextDumper dumper = new TextDumper(textFile);
+      try {
+        dumper.dump(book);
+      } catch (IOException e) {
+        System.err.println("An error occured trying to write the AppointmentBook to the file: " + textFile);
+        System.exit(1);
+      }
     }
 
     System.exit(0);
