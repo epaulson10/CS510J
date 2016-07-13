@@ -2,12 +2,14 @@ package edu.pdx.cs410J.erik;
 
 import edu.pdx.cs410J.AbstractAppointmentBook;
 import edu.pdx.cs410J.ParserException;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +34,14 @@ public class TextParserTest {
             Assert.assertTrue(e.getMessage(), false);
         }
         parser = new TextParser(FILENAME);
+    }
+
+    @After
+    public void tearDown() {
+        File file = new File(FILENAME);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     @Test
@@ -60,6 +70,20 @@ public class TextParserTest {
             }
         }
         assertThat(initialAppts.size(), equalTo(0));
+    }
+
+    @Test
+    public void parserThrowsExceptionIfFileIsEmpty() {
+        TextParser emptyParser = new TextParser("src/test/testFiles/empty.txt");
+
+        boolean exceptionThrown = false;
+        try {
+             emptyParser.parse();
+        } catch (ParserException e) {
+            exceptionThrown = true;
+        }
+
+        assertThat("Expected ParserException to be thrown for empty file", exceptionThrown,equalTo(true));
     }
 
 }
