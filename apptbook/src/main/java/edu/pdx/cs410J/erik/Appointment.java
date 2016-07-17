@@ -29,12 +29,14 @@ public class Appointment extends AbstractAppointment {
 
   @Override
   public Date getBeginTime() {
-    return super.getBeginTime();
+    // Use the copy constructor to avoid returning our internal reference
+    return new Date(beginTime.getTime());
   }
 
   @Override
   public Date getEndTime() {
-    return super.getEndTime();
+    // Use the copy constructor to avoid returning our internal reference
+    return new Date(endTime.getTime());
   }
 
   @Override
