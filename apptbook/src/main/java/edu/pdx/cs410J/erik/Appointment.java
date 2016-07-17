@@ -2,11 +2,17 @@ package edu.pdx.cs410J.erik;
 
 import edu.pdx.cs410J.AbstractAppointment;
 
+import java.text.DateFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Appointment extends AbstractAppointment {
 
   private String description;
-  private String beginTime;
-  private String endTime;
+  private Date beginTime;
+  private Date endTime;
+  DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
 
   /**
    * Constructor for an Appointment
@@ -17,20 +23,29 @@ public class Appointment extends AbstractAppointment {
      */
   public Appointment(String description, String beginTime, String endTime) {
     this.description = description;
-    this.beginTime = beginTime;
-    this.endTime = endTime;
+    this.beginTime = parseStringIntoDate(beginTime);
+    this.endTime = parseStringIntoDate(endTime);
   }
 
+  @Override
+  public Date getBeginTime() {
+    return super.getBeginTime();
+  }
 
+  @Override
+  public Date getEndTime() {
+    return super.getEndTime();
+  }
 
   @Override
   public String getBeginTimeString() {
-    return beginTime;
+    return dateFormatter.format(beginTime);
   }
 
   @Override
   public String getEndTimeString() {
-    return endTime;
+    return dateFormatter.format(endTime);
+
   }
 
   @Override
@@ -58,5 +73,14 @@ public class Appointment extends AbstractAppointment {
     else {
       return false;
     }
+  }
+
+  private Date parseStringIntoDate(String dateString) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+    ParsePosition position = new ParsePosition(0);
+
+    Date date = simpleDateFormat.parse(dateString, position);
+
+    return date;
   }
 }

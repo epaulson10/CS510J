@@ -49,7 +49,7 @@ public class Project1IT extends InvokeMainTestCase {
   @Test
   public void testReadmeOptionOnlyPrintsReadme() {
     MainMethodResult result = invokeMain("-README", "Triple Entente",
-            "Armistice Agreement Meeting", "11/11/1918", "11:11", "11/11/1918", "12:11");
+            "Armistice Agreement Meeting", "11/11/1918", "11:11 am", "11/11/1918", "12:11 pm");
     assertThat(result.getExitCode(), equalTo(0));
     // Trimming the result is needed as we use println instead of print
     assertThat(result.getOut().trim(), equalTo(Project2.README));
@@ -59,15 +59,15 @@ public class Project1IT extends InvokeMainTestCase {
   @Test
   public void testPrintOptionPrintsDescription() {
     MainMethodResult result = invokeMain("-print", "Triple Entente",
-            "Armistice Agreement Meeting", "11/11/1918", "11:11", "11/11/1918", "12:11");
-    assertThat(result.getOut(), containsString("Armistice Agreement Meeting from 11/11/1918 11:11 until 11/11/1918 12:11"));
+            "Armistice Agreement Meeting", "11/11/1918", "11:11 am", "11/11/1918", "12:11 pm");
+    assertThat(result.getOut(), containsString("Armistice Agreement Meeting from 11/11/18 until 11/11/18"));
   }
 
   @Test
   public void textFileOptionShouldCreateATextFile() {
     String fileName = "myTestFile12312341.txt";
     MainMethodResult result = invokeMain("-textFile", fileName, "Triple Entente",
-            "Armistice Agreement Meeting", "11/11/1918", "11:11", "11/11/1918", "12:11");
+            "Armistice Agreement Meeting", "11/11/1918", "11:11 pm", "11/11/1918", "12:11 pm");
     File file = new File(fileName);
     assertThat(file.exists(), equalTo(true));
 
@@ -87,7 +87,7 @@ public class Project1IT extends InvokeMainTestCase {
       inputStream.close();
 
       MainMethodResult result = invokeMain("-textFile", existingTextFile, "-print", "Triple Entente",
-              "Open conflict", "09/02/1939", "11:11", "09/02/1939","23:59");
+              "Open conflict", "09/02/1939", "11:11 pm", "09/02/1939","23:59 pm");
       // Verify that print is still working with other options
       assertThat(result.getOut(), containsString("Open conflict"));
       Scanner scanner = new Scanner(fileToBackup);

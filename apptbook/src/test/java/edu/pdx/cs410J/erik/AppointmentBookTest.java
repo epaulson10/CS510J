@@ -35,7 +35,7 @@ public class AppointmentBookTest {
     public void addAppointment() throws Exception {
         assertTrue(testBook.getAppointments().size() == 0);
         for (int i = 1; i < 10; i++) {
-            testBook.addAppointment(new Appointment("A useless meeting", "12:00", "13:00"));
+            testBook.addAppointment(new Appointment("A useless meeting", "12/12/2016 12:00 pm", "12/12/2016 1:00 pm"));
             assertThat(testBook.getAppointments().size(), is(equalTo((i))));
         }
     }
