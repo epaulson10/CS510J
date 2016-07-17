@@ -1,4 +1,5 @@
 package edu.pdx.cs410J.erik;
+
 import edu.pdx.cs410J.AbstractAppointmentBook;
 
 import java.util.ArrayList;
@@ -6,10 +7,11 @@ import java.util.Collection;
 
 /**
  */
-public class AppointmentBook extends AbstractAppointmentBook<Appointment>{
+public class AppointmentBook extends AbstractAppointmentBook<Appointment> {
 
     private String owner;
     private ArrayList<Appointment> appointments = new ArrayList<>();
+
     /**
      * Constructor for the AppointmentBook
      *
