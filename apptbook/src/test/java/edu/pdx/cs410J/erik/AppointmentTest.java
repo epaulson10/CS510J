@@ -2,6 +2,7 @@ package edu.pdx.cs410J.erik;
 
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -39,7 +40,13 @@ public class AppointmentTest {
 
   @Test
   public void getBeginAndEndTimeAreImplemented() {
-    assertThat(testAppt.getBeginTime(), is(not(nullValue())));
-    assertThat(testAppt.getEndTime(), is(not(nullValue())));
+    Date start = testAppt.getBeginTime();
+    Date end = testAppt.getEndTime();
+    assertThat(start, is(not(nullValue())));
+    assertThat(end, is(not(nullValue())));
+    assertThat(start.toString(), containsString("Mon Nov 11 11:11:00 PST 1918"));
+    assertThat(end.toString(), containsString("Mon Nov 11 12:11:00 PST 1918"));
+
   }
+
 }
