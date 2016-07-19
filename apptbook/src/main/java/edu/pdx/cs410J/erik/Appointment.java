@@ -7,7 +7,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Appointment extends AbstractAppointment {
+public class Appointment extends AbstractAppointment implements Comparable<Appointment>{
 
     private String description;
     private Date beginTime;
@@ -88,5 +88,26 @@ public class Appointment extends AbstractAppointment {
         Date date = simpleDateFormat.parse(dateString, position);
 
         return date;
+    }
+
+    /**
+     * Compares this Appointment to the given Appointment. An Appointment is less than another if it starts first.
+     * If two Appointments start at the same time, then the one that ends first is less than the other. If the start
+     * and end times for the two appointments are the same, then the appointment with the lexigraphically less
+     * description is less than the other.
+     *
+     * @param appointment The Appointment to compare this Appointment to
+     *
+     * @return Less than 0 if this Appointment is less-than the given Appointment. Greater than 0 if this Appointment
+     * is greater than the given Appointment. 0 if the two Appointments are equal
+     */
+    @Override
+    public int compareTo(Appointment appointment) {
+        int beginningComp = this.beginTime.compareTo(appointment.beginTime);
+        if (beginningComp != 0) return beginningComp;
+        int endingComp = this.endTime.compareTo(appointment.endTime);
+        if (endingComp != 0) return endingComp;
+        int descComp = this.description.compareTo(appointment.description);
+        return descComp;
     }
 }
