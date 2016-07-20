@@ -4,6 +4,7 @@ import edu.pdx.cs410J.AbstractAppointmentBook;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  */
@@ -31,8 +32,17 @@ public class AppointmentBook extends AbstractAppointmentBook<Appointment> {
         return appointments;
     }
 
+    /**
+     * Add an {@link Appointment} into this AppointmentBook. Appointments are added in ascending order.
+     * To learn more about the ordering of Appointments, see {@link Appointment#compareTo(Appointment)}
+     * @param appointment The appointment to add to this appointment book;
+     */
     @Override
     public void addAppointment(Appointment appointment) {
-        appointments.add(appointment);
+        int index = Collections.binarySearch(appointments,appointment);
+        if (index < 0)
+            appointments.add((-index)-1, appointment);
+        else
+            appointments.add(index, appointment);
     }
 }
