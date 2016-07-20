@@ -6,6 +6,7 @@ import edu.pdx.cs410J.ParserException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -71,7 +72,9 @@ public class TextParser implements AppointmentBookParser {
                 }
 
             }
-            apptBook.addAppointment(new Appointment(desc, start, end));
+            Date startDate = new Date(Long.parseLong(start));
+            Date endDate = new Date(Long.parseLong(end));
+            apptBook.addAppointment(new Appointment(desc, startDate, endDate));
         }
 
         return apptBook;

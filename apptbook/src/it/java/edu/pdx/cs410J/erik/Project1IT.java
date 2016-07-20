@@ -6,10 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.print.DocFlavor;
-
 import java.io.*;
-import java.rmi.server.ExportException;
 import java.util.Scanner;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -18,15 +15,15 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Integration tests for the {@link Project2} main class.
+ * Integration tests for the {@link Project3} main class.
  */
 public class Project1IT extends InvokeMainTestCase {
 
   /**
-   * Invokes the main method of {@link Project2} with the given arguments.
+   * Invokes the main method of {@link Project3} with the given arguments.
    */
   private MainMethodResult invokeMain(String... args) {
-    return invokeMain( Project2.class, args );
+    return invokeMain( Project3.class, args );
   }
 
    private String existingTextFile = "src/test/testFiles/project2TestFile.txt";
@@ -65,38 +62,55 @@ public class Project1IT extends InvokeMainTestCase {
 
   @Test
   public void testIncorrectDateNotAccepted () {
-    MainMethodResult result = invokeMain("EazyE", "A stupid meeting", "01-01-1111", "13:00", "01-01-1111", "14:00");
+    MainMethodResult result = invokeMain("EazyE", "A stupid meeting", "01-01-1111", "13:00","am", "01-01-1111", "14:00", "am");
     assertThat(result.getExitCode(), equalTo(1));
-    assertThat(result.getErr().trim(), equalTo(Project2.DATE_WRONG_ERROR));
+    assertThat(result.getErr().trim(), equalTo(Project3.DATE_WRONG_ERROR));
   }
 
   @Test
   public void testReadmeOptionOnlyPrintsReadme() {
     MainMethodResult result = invokeMain("-README", "Triple Entente",
-            "Armistice Agreement Meeting", "11/11/1918", "11:11 am", "11/11/1918", "12:11 pm");
+            "Armistice Agreement Meeting", "11/11/1918", "11:11", "am", "11/11/1918", "12:11", "pm");
     assertThat(result.getExitCode(), equalTo(0));
     // Trimming the result is needed as we use println instead of print
-    assertThat(result.getOut().trim(), equalTo(Project2.README));
+    assertThat(result.getOut().trim(), equalTo(Project3.README));
 
   }
 
   @Test
   public void testPrintOptionPrintsDescription() {
     MainMethodResult result = invokeMain("-print", "Triple Entente",
-            "Armistice Agreement Meeting", "11/11/1918", "11:11 am", "11/11/1918", "12:11 pm");
+            "Armistice Agreement Meeting", "11/11/1918", "11:11", "am", "11/11/1918", "12:11", "pm");
     assertThat(result.getOut(), containsString("Armistice Agreement Meeting from 11/11/18 until 11/11/18"));
   }
 
   @Test
+  public void testPrettyToStdOutOption() {
+    MainMethodResult result = invokeMain("-pretty", "-", "Triple Entente",
+            "Armistice Agreement Meeting", "11/11/1918", "11:11", "am", "11/11/1918", "12:11", "pm");
+    assertThat(result.getOut(), containsString("Starts at: "));
+      assertThat(result.getOut(), containsString("Ends at: "));
+      assertThat(result.getOut(), containsString("Duration in minutes: "));
+
+      result = invokeMain("-pretty", "-", "-print", "Triple Entente",
+            "Armistice Agreement Meeting", "11/11/1918", "11:11", "am", "11/11/1918", "12:11", "pm");
+    assertThat(result.getOut(), containsString("Starts at: "));
+      assertThat(result.getOut(), containsString("Ends at: "));
+      assertThat(result.getOut(), containsString("Duration in minutes: "));
+  }
+  @Test
   public void textFileOptionShouldCreateATextFile() {
     String fileName = "myTestFile12312341.txt";
+      File file = new File(fileName);
+      if (file.exists()) {
+          file.delete();
+      }
     MainMethodResult result = invokeMain("-textFile", fileName, "Triple Entente",
-            "Armistice Agreement Meeting", "11/11/1918", "11:11 pm", "11/11/1918", "12:11 pm");
-    File file = new File(fileName);
+            "Armistice Agreement Meeting", "11/11/1918", "11:11", "pm", "11/11/1918", "12:11", "pm");
     assertThat(file.exists(), equalTo(true));
 
     //Cleanup
-    //file.delete();
+    file.delete();
   }
 
     @After
@@ -118,7 +132,7 @@ public class Project1IT extends InvokeMainTestCase {
 
         try {
             MainMethodResult result = invokeMain("-textFile", existingTextFile, "-print", "Triple Entente",
-                    "Open conflict", "09/02/1939", "11:11", "09/02/1939", "23:59");
+                    "Open conflict", "09/02/1939", "11:11", "am", "09/02/1939", "11:59", "pm");
             // Verify that print is still working with other options
             assertThat(result.getOut(), containsString("Open conflict"));
             Scanner scanner = new Scanner(new File(existingTextFile));
@@ -142,7 +156,7 @@ public class Project1IT extends InvokeMainTestCase {
     @Test
     public void readingAnEmptyFileReturnsAnError() {
          MainMethodResult result = invokeMain("-textFile", emptyTextFile, "Triple Entente",
-                "Armistice Agreement Meeting", "11/11/1918", "11:11", "11/11/1918", "12:11");
+                "Armistice Agreement Meeting", "11/11/1918", "11:11", "am", "11/11/1918", "12:11", "pm");
 
         assertThat(result.getExitCode(), not(equalTo(0)));
         assertThat(result.getErr(), containsString("Incorrectly formatted"));
@@ -152,7 +166,7 @@ public class Project1IT extends InvokeMainTestCase {
     @Test
     public void ownerNameMismatchIsAnError() {
      MainMethodResult result = invokeMain("-textFile", existingTextFile, "Westley the Doge",
-                "Armistice Agreement Meeting", "11/11/1918", "11:11", "11/11/1918", "12:11");
+                "Armistice Agreement Meeting", "11/11/1918", "11:11", "am", "11/11/1918", "12:11", "pm");
 
         assertThat(result.getExitCode(), not(equalTo(0)));
         assertThat(result.getErr(), containsString("Owner name doesn't match the owner name in the text file."));

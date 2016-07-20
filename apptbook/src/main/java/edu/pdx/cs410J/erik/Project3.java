@@ -3,7 +3,10 @@ package edu.pdx.cs410J.erik;
 import edu.pdx.cs410J.ParserException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,9 +15,10 @@ import java.util.Arrays;
 /**
  * The main class for the CS410J appointment book Project
  */
-public class Project2 {
+public class Project3 {
+    // TODO: FIX THIS
     public static final String README = "By: Erik Paulson\n" +
-            "CS410J Project 2: Storing an Appointment Book in a Text File \n" +
+            "CS410J Project 3: Storing an Appointment Book in a Text File \n" +
             "Command line program that creates an AppointmentBook and Appointment \n" +
             "with the given command line arguments. The user may specify a text file \n" +
             "as an option to store the appointment book from disk or load it.";
@@ -22,17 +26,17 @@ public class Project2 {
     public static final String DATE_WRONG_ERROR = "Date is not in 24-hour format: mm/dd/yyyy hh:mm";
 
     // I like to save memory whenever I can
-    private final static byte NUM_OPTIONS = 3;
-
+    private final static byte NUM_OPTIONS = 4;
 
     /**
-     * The main entry point for the Project2 application
+     * The main entry point for the Project3 application
      *
      * @param args Command line arguments
      */
     public static void main(String[] args) {
         boolean printDescription = false;
         String textFile = null;
+        String prettyFile = null;
 
         if (args.length == 0) {
             System.err.println("Missing command line arguments");
@@ -53,26 +57,23 @@ public class Project2 {
             }
 
             // If the print option is passed, save that info for later and remove that param
-            if (argument.equals("-print")) {
-                printDescription = true;
-                // Remove the options from the list to make parsing arguments easier
-                argList.remove("-print");
-            } else if (argument.equals("-textFile")) {
-                try {
-                    textFile = argList.get(1);
-                } catch (IndexOutOfBoundsException e) {
-                    System.err.println("The name of a textFile must follow the -textFile option.");
-                    System.exit(1);
-                }
-
-                // remove() shifts the elements to the left, so calling this twice pops -textFile and the given filename
-                argList.remove(0);
-                argList.remove(0);
+            switch (argument) {
+                case "-print":
+                    printDescription = true;
+                    // Remove the options from the list to make parsing arguments easier
+                    argList.remove("-print");
+                    break;
+                case "-textFile":
+                    textFile = getFileNameAndShift(argList);
+                    break;
+                case "-pretty":
+                    prettyFile = getFileNameAndShift(argList);
+                    break;
             }
         }
 
         // Validate the number of args
-        if (argList.size() != 6) {
+        if (argList.size() != 8) {
             System.err.println("Incorrect command line arguments.");
             System.exit(1);
         }
@@ -82,8 +83,10 @@ public class Project2 {
         String description = argList.get(1);
         String startDate = argList.get(2);
         String startTime = argList.get(3);
-        String endDate = argList.get(4);
-        String endTime = argList.get(5);
+        String startAmOrPm = argList.get(4);
+        String endDate = argList.get(5);
+        String endTime = argList.get(6);
+        String endAmOrPm = argList.get(7);
 
         if (description.equals("")) {
             System.err.println("Description cannot be empty");
@@ -91,8 +94,8 @@ public class Project2 {
         }
 
         // The dates and time comes in separate, so we need to concatenate them together to feed them to our classes
-        String startDateAndTime = startDate + " " + startTime;
-        String endDateAndTime = endDate + " " + endTime;
+        String startDateAndTime = startDate + " " + startTime + " " + startAmOrPm;
+        String endDateAndTime = endDate + " " + endTime + " " + endAmOrPm;
 
         if (!isDateValid(startDateAndTime) || !isDateValid(endDateAndTime)) {
             System.err.println(DATE_WRONG_ERROR);
@@ -135,7 +138,45 @@ public class Project2 {
             }
         }
 
+        if (prettyFile != null) {
+            PrettyPrinter printer = null;
+            FileOutputStream fos = null;
+            if (prettyFile.equals("-")) {
+                printer = new PrettyPrinter(System.out);
+            } else {
+                try {
+                    fos = new FileOutputStream(new File(prettyFile));
+                    printer = new PrettyPrinter(fos);
+                } catch (IOException e) {
+                    System.err.println("An error occurred trying to open file: " + prettyFile);
+                    System.exit(1);
+                }
+            }
+
+            try {
+                printer.dump(book);
+            } catch (IOException e) {
+                String outLocation = prettyFile.equals("-") ? "standard out" : "file: " + prettyFile;
+                System.err.println("An error occurred trying to pretty print to " + outLocation);
+            }
+        }
+
         System.exit(0);
+    }
+
+    private static String getFileNameAndShift(ArrayList<String> argList) {
+        String returnValue = null;
+        try {
+            returnValue = argList.get(1);
+        } catch (IndexOutOfBoundsException e) {
+            System.err.println("The name of a textFile must follow the -textFile option.");
+            System.exit(1);
+        }
+
+        // remove() shifts the elements to the left, so calling this twice pops -textFile and the given filename
+        argList.remove(0);
+        argList.remove(0);
+        return returnValue;
     }
 
     /**
@@ -147,7 +188,7 @@ public class Project2 {
      */
     private static boolean isDateValid(String date) {
         // mm/dd/yyyy hh:mm
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy h:m a");
         ParsePosition position = new ParsePosition(0);
         simpleDateFormat.parse(date, position);
         return position.getIndex() != 0;

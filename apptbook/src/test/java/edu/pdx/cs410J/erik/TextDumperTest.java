@@ -18,9 +18,9 @@ public class TextDumperTest {
     final static String FILENAME = "test12435326.txt";
     final static String OWNER = "Archduke Franz Ferdinand";
     final static String DESCRIPTION = "Sarajevo Visit";
-    final static String START = "06/28/1914 08:00";
-    final static String END = "06/28/1914 17:00";
-    final static String[] arrayOfTargetStrings = {OWNER, DESCRIPTION, START, END};
+    final static String START = "06/28/1914 08:00 am";
+    final static String END = "06/28/1914 5:00 pm";
+    final static String[] arrayOfTargetStrings = {OWNER, DESCRIPTION};
 
     TextDumper dumper;
     AppointmentBook book;

@@ -6,6 +6,7 @@ import edu.pdx.cs410J.AppointmentBookDumper;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -36,8 +37,8 @@ public class TextDumper implements AppointmentBookDumper {
 
         for (Appointment appt : appointments) {
             writer.println(appt.getDescription());
-            writer.println(appt.getBeginTimeString());
-            writer.println(appt.getEndTimeString());
+            writer.println(appt.getBeginTime().getTime());
+            writer.println(appt.getEndTime().getTime());
         }
         writer.close();
     }

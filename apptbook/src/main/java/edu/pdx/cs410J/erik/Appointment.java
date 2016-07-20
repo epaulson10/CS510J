@@ -27,6 +27,19 @@ public class Appointment extends AbstractAppointment implements Comparable<Appoi
         this.endTime = parseStringIntoDate(endTime);
     }
 
+     /**
+     * Constructor for an Appointment
+     *
+     * @param description The description for this Appointment
+     * @param beginTime   The start time for this appointment as a {@link Date}
+     * @param endTime     The end time for this appointment as a {@link Date}
+     */
+    public Appointment(String description, Date beginTime, Date endTime) {
+        this.description = description;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+    }
+
     @Override
     public Date getBeginTime() {
         // Use the copy constructor to avoid returning our internal reference
@@ -82,7 +95,7 @@ public class Appointment extends AbstractAppointment implements Comparable<Appoi
     }
 
     private Date parseStringIntoDate(String dateString) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy h:m a");
         ParsePosition position = new ParsePosition(0);
 
         Date date = simpleDateFormat.parse(dateString, position);

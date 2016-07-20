@@ -19,7 +19,7 @@ public class Utils {
 
     public static Appointment[] generateAppointments(int numToGenerate) {
         // mm/dd/yyyy hh:mm
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy h:m a");
         Random random = new Random();
         Appointment[] appointments = new Appointment[numToGenerate];
         for (int i = 0; i < numToGenerate; i++) {
