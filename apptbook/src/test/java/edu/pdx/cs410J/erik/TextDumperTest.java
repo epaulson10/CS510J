@@ -1,5 +1,6 @@
 package edu.pdx.cs410J.erik;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,14 @@ public class TextDumperTest {
         dumper = new TextDumper(FILENAME);
         book = new AppointmentBook(OWNER);
         book.addAppointment(new Appointment(DESCRIPTION, START, END));
+    }
+
+    @After
+    public void teardown() {
+        File file = new File(FILENAME);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     @Test
