@@ -40,23 +40,39 @@ public class Appointment extends AbstractAppointment implements Comparable<Appoi
         this.endTime = endTime;
     }
 
+    /**
+     * Get the starting time of this Appointment as a {@link Date}
+     * @return A {@link Date} representing the start of this appointment.
+     */
     @Override
     public Date getBeginTime() {
         // Use the copy constructor to avoid returning our internal reference
         return new Date(beginTime.getTime());
     }
 
+    /**
+     * Get the ending time of this Appointment as a {@link Date}
+     * @return A {@link Date} representing the end of this appointment.
+     */
     @Override
     public Date getEndTime() {
         // Use the copy constructor to avoid returning our internal reference
         return new Date(endTime.getTime());
     }
 
+    /**
+     * Returns a string representation of the start of this Appointment.
+     * @return A string representation of the start of this Appointment.
+     */
     @Override
     public String getBeginTimeString() {
         return dateFormatter.format(beginTime);
     }
 
+    /**
+     * Returns a string representation of the end of this Appointment.
+     * @return A string representation of the end of this Appointment.
+     */
     @Override
     public String getEndTimeString() {
         return dateFormatter.format(endTime);
@@ -94,8 +110,13 @@ public class Appointment extends AbstractAppointment implements Comparable<Appoi
         }
     }
 
+    /**
+     * Helper function that parses a string into a Date
+     * @param dateString The string to parse
+     * @return A {@link Date} that was parsed from the string.
+     */
     private Date parseStringIntoDate(String dateString) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy h:m a");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy hh:mm a");
         ParsePosition position = new ParsePosition(0);
 
         Date date = simpleDateFormat.parse(dateString, position);

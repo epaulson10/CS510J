@@ -16,14 +16,15 @@ import java.util.Arrays;
  * The main class for the CS410J appointment book Project
  */
 public class Project3 {
-    // TODO: FIX THIS
     public static final String README = "By: Erik Paulson\n" +
-            "CS410J Project 3: Storing an Appointment Book in a Text File \n" +
-            "Command line program that creates an AppointmentBook and Appointment \n" +
+            "CS410J Project 3: Pretty Printing an Appointment Book \n" +
+            "A command line program that creates an AppointmentBook and Appointment \n" +
             "with the given command line arguments. The user may specify a text file \n" +
-            "as an option to store the appointment book from disk or load it.";
+            "as an option to store the appointment book from disk or load it. \n"+
+            "Additionally, the user may print a textual representation of the AppointmentBook\n" +
+            "to a file, or to standard out.";
 
-    public static final String DATE_WRONG_ERROR = "Date is not in 24-hour format: mm/dd/yyyy hh:mm";
+    public static final String DATE_WRONG_ERROR = "Date is not in 12-hour format: mm/dd/yyyy hh:mm (am|pm)";
 
     // I like to save memory whenever I can
     private final static byte NUM_OPTIONS = 4;
@@ -164,6 +165,12 @@ public class Project3 {
         System.exit(0);
     }
 
+    /**
+     * A helper function to parse options that have a filename after them
+     *
+     * @param argList The list of command line arguments
+     * @return The filename given in the option
+     */
     private static String getFileNameAndShift(ArrayList<String> argList) {
         String returnValue = null;
         try {

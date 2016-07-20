@@ -22,11 +22,20 @@ public class AppointmentBook extends AbstractAppointmentBook<Appointment> {
         this.owner = owner;
     }
 
+    /**
+     *
+     * @return The name of the AppointmentBook owner.
+     */
     @Override
     public String getOwnerName() {
         return this.owner;
     }
 
+    /**
+     * Returns a sorted collection of Appointments in this AppointmentBook
+     *
+     * @return A collection of sorted Appointments.
+     */
     @Override
     public Collection<Appointment> getAppointments() {
         return appointments;
