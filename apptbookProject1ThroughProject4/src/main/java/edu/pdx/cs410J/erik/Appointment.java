@@ -115,7 +115,7 @@ public class Appointment extends AbstractAppointment implements Comparable<Appoi
      * @param dateString The string to parse
      * @return A {@link Date} that was parsed from the string.
      */
-    static Date parseStringIntoDate(String dateString) {
+    private Date parseStringIntoDate(String dateString) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy hh:mm a");
         ParsePosition position = new ParsePosition(0);
 
