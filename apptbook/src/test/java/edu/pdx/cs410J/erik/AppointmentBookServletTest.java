@@ -33,6 +33,7 @@ public class AppointmentBookServletTest {
     verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, Messages.ownerNotFound("Eazy"));
   }
 
+    /* Commented out to use as an example later
   @Ignore
   @Test
   public void addOneMapping() throws ServletException, IOException {
@@ -56,4 +57,5 @@ public class AppointmentBookServletTest {
 
     assertThat(servlet.getValueForKey(testKey), equalTo(testValue));
   }
+  */
 }

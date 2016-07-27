@@ -26,10 +26,10 @@ public class Project4 {
     public static final String DATE_WRONG_ERROR = "Date is not in 12-hour format: mm/dd/yyyy hh:mm (am|pm)";
 
     // I like to save memory whenever I can
-    private final static byte NUM_OPTIONS = 4;
+    private final static byte NUM_OPTIONS = 5;
 
     /**
-     * The main entry point for the Project3 application
+     * The main entry point for the Project4 application
      *
      * @param args Command line arguments
      */
@@ -72,7 +72,7 @@ public class Project4 {
                 case "-pretty":
                     prettyFile = getParameterAndShift(argList);
                     break;
-                case "-hostname":
+                case "-host":
                     hostname = getParameterAndShift(argList);
                     break;
                 case "-port":
@@ -101,6 +101,8 @@ public class Project4 {
         String endTime = null;
         String endAmOrPm = null;
         // Get all the arguments into easy to read variables
+        // There are two paths here: the first is creating an appointment (which needs a description). The second is
+        // searching for appointments, which does not take a description
         if (!doSearch) {
             owner       = argList.get(0);
             description = argList.get(1);
@@ -151,16 +153,14 @@ public class Project4 {
             HttpRequestHelper.Response response = null;
             try {
                 if (!doSearch) {
-                response = client.createAppointment(owner, description, startDateAndTime, endDateAndTime);
+                    response = client.createAppointment(owner, description, startDateAndTime, endDateAndTime);
+                    checkResponseCode( HttpURLConnection.HTTP_OK, response);
                     if (printDescription) {
-                        checkResponseCode( HttpURLConnection.HTTP_OK, response);
-                        if (printDescription) {
-                            System.out.println(response.getContent());
-                        }
+                        System.out.println(response.getContent());
                     }
                 } else {
                     if (description != null) {
-                        usage("description and -search cannot both be specfied.");
+                        usage("-description and -search cannot both be specfied.");
                     }
                     response = client.searchAppointments(owner, startDateAndTime, endDateAndTime);
                     checkResponseCode(HttpURLConnection.HTTP_OK, response);
@@ -172,6 +172,9 @@ public class Project4 {
                 return;
             }
         }
+        /*
+        The behavior below is fallback to Project 1 behaviour in the case that no host or port is given.
+         */
         else {
             AppointmentBook book = null;
             if (textFile != null && (new File(textFile).exists())) {
@@ -272,77 +275,6 @@ public class Project4 {
         simpleDateFormat.parse(date, position);
         return position.getIndex() != 0;
 
-    }
-
-    public static final String MISSING_ARGS = "Missing command line arguments";
-
-    public static void mainOld(String... args) {
-        String hostName = null;
-        String portString = null;
-        String key = null;
-        String value = null;
-
-        for (String arg : args) {
-            if (hostName == null) {
-                hostName = arg;
-
-            } else if ( portString == null) {
-                portString = arg;
-
-            } else if (key == null) {
-                key = arg;
-
-            } else if (value == null) {
-                value = arg;
-
-            } else {
-                usage("Extraneous command line argument: " + arg);
-            }
-        }
-
-        if (hostName == null) {
-            usage( MISSING_ARGS );
-
-        } else if ( portString == null) {
-            usage( "Missing port" );
-        }
-
-        int port;
-        try {
-            port = Integer.parseInt( portString );
-
-        } catch (NumberFormatException ex) {
-            usage("Port \"" + portString + "\" must be an integer");
-            return;
-        }
-
-        AppointmentBookRestClient client = new AppointmentBookRestClient(hostName, port);
-
-        HttpRequestHelper.Response response;
-        try {
-            if (key == null) {
-                // Print all key/value pairs
-                response = client.getAllKeysAndValues();
-
-            } else if (value == null) {
-                // Print all values of key
-                response = client.getValues(key);
-
-            } else {
-                // Post the key/value pair
-                response = client.addKeyValuePair(key, value);
-            }
-
-            checkResponseCode( HttpURLConnection.HTTP_OK, response);
-
-        } catch ( IOException ex ) {
-            error("While contacting server: " + ex);
-            return;
-        }
-
-        System.out.println(response.getContent());
-
-        System.exit(0);
     }
 
     /**

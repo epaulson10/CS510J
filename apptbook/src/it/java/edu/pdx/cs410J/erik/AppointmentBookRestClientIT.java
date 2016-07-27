@@ -26,6 +26,7 @@ public class AppointmentBookRestClientIT {
     return new AppointmentBookRestClient(HOSTNAME, port);
   }
 
+    /* Commented out so I can use them as an example later.
   @Ignore
   @Test
   public void test0RemoveAllMappings() throws IOException {
@@ -64,5 +65,6 @@ public class AppointmentBookRestClientIT {
     assertThat(response.getContent(), containsString(Messages.missingRequiredParameter("key")));
     assertThat(response.getCode(), equalTo(HttpURLConnection.HTTP_PRECON_FAILED));
   }
+  */
 
 }

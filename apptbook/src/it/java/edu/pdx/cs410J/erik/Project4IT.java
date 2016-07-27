@@ -22,6 +22,7 @@ public class Project4IT extends InvokeMainTestCase {
     private static final String HOSTNAME = "localhost";
     private static final String PORT = System.getProperty("http.port", "8080");
 
+    /* Commented out to use them as an example later
     @Ignore
     @Test
     public void test0RemoveAllMappings() throws IOException {
@@ -79,4 +80,5 @@ public class Project4IT extends InvokeMainTestCase {
         assertThat(out, out, containsString(Messages.getMappingCount(1)));
         assertThat(out, out, containsString(Messages.formatKeyValuePair(key, value)));
     }
+    */
 }
