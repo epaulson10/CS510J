@@ -19,22 +19,18 @@ import static org.mockito.Mockito.*;
  */
 public class AppointmentBookServletTest {
 
-  @Ignore
   @Test
-  public void initiallyServletContainsNoKeyValueMappings() throws ServletException, IOException {
+  public void initiallyServletContainsNoAppointments() throws ServletException, IOException {
     AppointmentBookServlet servlet = new AppointmentBookServlet();
 
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
-    PrintWriter pw = mock(PrintWriter.class);
 
-    when(response.getWriter()).thenReturn(pw);
+    when(request.getParameter("owner")).thenReturn("Eazy");
 
     servlet.doGet(request, response);
 
-    int expectedMappings = 0;
-    verify(pw).println(Messages.getMappingCount(expectedMappings));
-    verify(response).setStatus(HttpServletResponse.SC_OK);
+    verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, Messages.ownerNotFound("Eazy"));
   }
 
   @Ignore

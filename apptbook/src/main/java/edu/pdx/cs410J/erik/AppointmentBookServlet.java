@@ -54,10 +54,10 @@ public class AppointmentBookServlet extends HttpServlet
         }
 
         PrettyPrinter pp = new PrettyPrinter(response.getOutputStream());
-        AppointmentBook book = apptBooks.get(OWNER);
+        AppointmentBook book = apptBooks.get(owner);
 
         if (null == book) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, Messages.ownerNotFound(OWNER));
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, Messages.ownerNotFound(owner));
             return;
         }
 
@@ -107,7 +107,7 @@ public class AppointmentBookServlet extends HttpServlet
         AppointmentBook book = apptBooks.get(params.get(OWNER));
         if (null == book) {
             book = new AppointmentBook(params.get(OWNER));
-            apptBooks.put(OWNER, book);
+            apptBooks.put(params.get(OWNER), book);
         }
 
         Date start = Appointment.parseStringIntoDate(params.get(BEGIN));
@@ -123,6 +123,7 @@ public class AppointmentBookServlet extends HttpServlet
         Appointment appointment = new Appointment(params.get(DESCRIPTION), params.get(BEGIN), params.get(END));
         book.addAppointment(appointment);
 
+        response.getWriter().write(appointment.getDescription());
         response.setStatus( HttpServletResponse.SC_OK);
     }
 

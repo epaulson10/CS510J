@@ -26,6 +26,15 @@ public class AppointmentBookRestClient extends HttpRequestHelper
         this.url = String.format( "http://%s:%d/%s/%s", hostName, port, WEB_APP, SERVLET );
     }
 
+    public Response createAppointment(String owner, String description, String start, String end) throws IOException{
+        return post(this.url, "owner", owner, "description", description, "beginTime", start, "endTime", end);
+    }
+
+    public Response searchAppointments(String owner, String start, String end) throws IOException{
+        return get(this.url, owner, start, end);
+    }
+
+
     /**
      * Returns all keys and values from the server
      */

@@ -3,6 +3,7 @@ package edu.pdx.cs410J.erik;
 import edu.pdx.cs410J.InvokeMainTestCase;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
@@ -21,6 +22,7 @@ public class Project4IT extends InvokeMainTestCase {
     private static final String HOSTNAME = "localhost";
     private static final String PORT = System.getProperty("http.port", "8080");
 
+    @Ignore
     @Test
     public void test0RemoveAllMappings() throws IOException {
       AppointmentBookRestClient client = new AppointmentBookRestClient(HOSTNAME, Integer.parseInt(PORT));
@@ -28,6 +30,7 @@ public class Project4IT extends InvokeMainTestCase {
       assertThat(response.getContent(), response.getCode(), equalTo(200));
     }
 
+    @Ignore
     @Test
     public void test1NoCommandLineArguments() {
         MainMethodResult result = invokeMain( Project4.class );
@@ -35,6 +38,7 @@ public class Project4IT extends InvokeMainTestCase {
         assertThat(result.getErr(), containsString(Project4.MISSING_ARGS));
     }
 
+    @Ignore
     @Test
     public void test2EmptyServer() {
         MainMethodResult result = invokeMain( Project4.class, HOSTNAME, PORT );
@@ -43,6 +47,7 @@ public class Project4IT extends InvokeMainTestCase {
         assertThat(out, out, containsString(Messages.getMappingCount(0)));
     }
 
+    @Ignore
     @Test
     public void test3NoValues() {
         String key = "KEY";
@@ -53,6 +58,7 @@ public class Project4IT extends InvokeMainTestCase {
         assertThat(out, out, containsString(Messages.formatKeyValuePair(key, null)));
     }
 
+    @Ignore
     @Test
     public void test4AddValue() {
         String key = "KEY";
