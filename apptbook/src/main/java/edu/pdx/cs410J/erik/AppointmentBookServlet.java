@@ -39,6 +39,7 @@ public class AppointmentBookServlet extends HttpServlet
         String owner = getParameter(OWNER, request);
         if (null == owner) {
             missingRequiredParameter(response,OWNER);
+            return;
         }
 
         boolean isSearchPath = false;
@@ -47,8 +48,10 @@ public class AppointmentBookServlet extends HttpServlet
         // If exactly one parameter is null, this is an error. We need both parameters
         if (null == beginTime && null != endTime) {
             missingRequiredParameter(response, BEGIN);
+            return;
         } else if (null != beginTime && null == endTime) {
             missingRequiredParameter(response, END);
+            return;
         } else if (beginTime != null && endTime != null) {
             isSearchPath = true;
         }
@@ -101,6 +104,7 @@ public class AppointmentBookServlet extends HttpServlet
             Map.Entry<String, String> entry = (Map.Entry) it.next();
             if (null == entry.getValue()) {
                 missingRequiredParameter(response, entry.getKey());
+                return;
             }
         }
 
