@@ -27,32 +27,30 @@ public class AppointmentBookRestClient extends HttpRequestHelper
     }
 
     /**
-     * Returns all keys and values from the server
+     * Send a request to the server to create an appointment
+     *
+     * @param owner The owner of the AppointmentBook in which to insert the appointment
+     * @param description The description of the appointment
+     * @param start The beginTime of the appointment
+     * @param end The endTime of the appointment
+     * @return The response from the server.
+     * @throws IOException
      */
-    public Response getAllKeysAndValues() throws IOException
-    {
-        return get(this.url );
+    public Response createAppointment(String owner, String description, String start, String end) throws IOException{
+        return post(this.url, "owner", owner, "description", description, "beginTime", start, "endTime", end);
     }
 
     /**
-     * Returns all values for the given key
+     * Send a request to the server to search for appointments in a time range.
+     *
+     * @param owner The owner of the appointment book to search for.
+     * @param start The start of the time range to search for in format MM/DD/YYYY HH:MM (am | pm)
+     * @param end The end of the time range to search for in format MM/DD/YYYY HH:MM (am | pm)
+     * @return The response from the server
+     * @throws IOException
      */
-    public Response getValues( String key ) throws IOException
-    {
-        return get(this.url, "key", key);
+    public Response searchAppointments(String owner, String start, String end) throws IOException{
+        return get(this.url, "owner", owner, "beginTime", start, "endTime", end);
     }
 
-    public Response addKeyValuePair( String key, String value ) throws IOException
-    {
-        return postToMyURL("key", key, "value", value);
-    }
-
-    @VisibleForTesting
-    Response postToMyURL(String... keysAndValues) throws IOException {
-        return post(this.url, keysAndValues);
-    }
-
-    public Response removeAllMappings() throws IOException {
-        return delete(this.url);
-    }
 }

@@ -2,6 +2,7 @@ package edu.pdx.cs410J.erik;
 
 import edu.pdx.cs410J.web.HttpRequestHelper.Response;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
@@ -25,6 +26,8 @@ public class AppointmentBookRestClientIT {
     return new AppointmentBookRestClient(HOSTNAME, port);
   }
 
+    /* Commented out so I can use them as an example later.
+  @Ignore
   @Test
   public void test0RemoveAllMappings() throws IOException {
     AppointmentBookRestClient client = newAppointmentBookRestClient();
@@ -32,6 +35,7 @@ public class AppointmentBookRestClientIT {
     assertThat(response.getContent(), response.getCode(), equalTo(200));
   }
 
+  @Ignore
   @Test
   public void test1EmptyServerContainsNoMappings() throws IOException {
     AppointmentBookRestClient client = newAppointmentBookRestClient();
@@ -41,6 +45,7 @@ public class AppointmentBookRestClientIT {
     assertThat(content, containsString(Messages.getMappingCount(0)));
   }
 
+  @Ignore
   @Test
   public void test2AddOneKeyValuePair() throws IOException {
     AppointmentBookRestClient client = newAppointmentBookRestClient();
@@ -52,6 +57,7 @@ public class AppointmentBookRestClientIT {
     assertThat(content, containsString(Messages.mappedKeyValue(testKey, testValue)));
   }
 
+  @Ignore
   @Test
   public void missingRequiredParameterReturnsPreconditionFailed() throws IOException {
     AppointmentBookRestClient client = newAppointmentBookRestClient();
@@ -59,5 +65,6 @@ public class AppointmentBookRestClientIT {
     assertThat(response.getContent(), containsString(Messages.missingRequiredParameter("key")));
     assertThat(response.getCode(), equalTo(HttpURLConnection.HTTP_PRECON_FAILED));
   }
+  */
 
 }
