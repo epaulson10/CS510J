@@ -5,6 +5,8 @@ import edu.pdx.cs410J.erik.client.Appointment;
 import edu.pdx.cs410J.erik.client.AppointmentBook;
 import edu.pdx.cs410J.erik.client.PingService;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -46,7 +48,19 @@ public class PingServiceImpl extends RemoteServiceServlet implements PingService
 
     @Override
     public AppointmentBook searchAppointments(String owner, String beginTime, String endTime) {
-        return null;
+        AppointmentBook book = getAppointmentBook(owner);
+
+        Collection<Appointment> apptCollection = book.getAppointments();
+        AppointmentBook tempApptBook = new AppointmentBook(owner);
+        Date beginDate = Appointment.parseStringIntoDate(beginTime);
+        Date endDate = Appointment.parseStringIntoDate(endTime);
+        for (Appointment appt : apptCollection) {
+            if (appt.getBeginTime().compareTo(beginDate) >= 0 && appt.getEndTime().compareTo(endDate) <= 0) {
+                tempApptBook.addAppointment(appt);
+            }
+        }
+
+        return tempApptBook;
     }
 
 
