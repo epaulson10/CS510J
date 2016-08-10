@@ -128,6 +128,10 @@ public class Appointment extends AbstractAppointment implements Comparable<Appoi
         return dateTimeFormat.parse(dateString);
     }
 
+    public static String parseDateIntoString(Date date) {
+        return DateTimeFormat.getFormat("MM/dd/yyyy hh:mm a").format(date);
+    }
+
     /**
      * Compares this Appointment to the given Appointment. An Appointment is less than another if it starts first.
      * If two Appointments start at the same time, then the one that ends first is less than the other. If the start

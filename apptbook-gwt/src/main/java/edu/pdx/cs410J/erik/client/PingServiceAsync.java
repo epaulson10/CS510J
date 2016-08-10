@@ -3,7 +3,7 @@ package edu.pdx.cs410J.erik.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * The client-side interface to the ping service
+ * The client-side interface to the ping asyncService
  */
 public interface PingServiceAsync {
 
@@ -18,5 +18,5 @@ public interface PingServiceAsync {
 
   void addAppointment(String owner, String description, String beginTime, String endTime, AsyncCallback<Boolean> async);
 
-  void createAppointmentBook(String owner);
+  void createAppointmentBook(String owner, AsyncCallback<Void> async);
 }
