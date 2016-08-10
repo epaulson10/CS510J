@@ -28,6 +28,7 @@ public class PrettyPrinter {
     public static String getPrettyString(AppointmentBook book) {
         StringBuilder builder = new StringBuilder();
         builder.append("Appointment Book Owner: ").append(book.getOwnerName()).append('\n');
+
         for (Appointment appointment : (Collection<Appointment>) book.getAppointments()) {
             Date start = appointment.getBeginTime();
             Date end = appointment.getEndTime();

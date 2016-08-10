@@ -3,8 +3,9 @@ package edu.pdx.cs410J.erik.client;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.thirdparty.common.css.compiler.ast.StringCharStream;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -72,8 +73,9 @@ public class AppointmentBookGwt implements EntryPoint {
     }
 
     private void addWidgets() {
-        textArea = new TextArea();
 
+
+        textArea = new TextArea();
         tabPanel = new TabPanel();
         addPanel = new VerticalPanel();
         searchPanel = new VerticalPanel();
@@ -83,14 +85,18 @@ public class AppointmentBookGwt implements EntryPoint {
         descriptionTextBoxAdd = new TextBox();
         startLabelAdd = new Label("Start time: ");
         startTextBoxAdd = new TextBox();
+        startTextBoxAdd.getElement().setPropertyString("placeholder", "MM/dd/yyyy hh:mm aa");
         endLabelAdd = new Label("End time: ");
         endTextBoxAdd = new TextBox();
+        endTextBoxAdd.getElement().setPropertyString("placeholder", "MM/dd/yyyy hh:mm aa");
         submitNewAppointment = new Button("Submit");
 
         startLabelSearch = new Label("Start time: ");
         startTextBoxSearch = new TextBox();
+        startTextBoxSearch.getElement().setPropertyString("placeholder", "MM/dd/yyyy hh:mm aa");
         endLabelSearch = new Label("End time: ");
         endTextBoxSearch = new TextBox();
+        endTextBoxSearch.getElement().setPropertyString("placeholder", "MM/dd/yyyy hh:mm aa");
         submitSearch = new Button("Search");
 
         switchTextBox = new TextBox();
@@ -128,7 +134,7 @@ public class AppointmentBookGwt implements EntryPoint {
                 asyncService.addAppointment(currentOwner, description, start, end, new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(Throwable throwable) {
-                        alerter.alert(throwable.getMessage());
+                       checkThrowable(throwable);
                     }
 
                     @Override
@@ -138,8 +144,59 @@ public class AppointmentBookGwt implements EntryPoint {
                 });
             }
         });
+
+        submitSearch.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                asyncSearchAppts();
+            }
+        });
+
+        submitSwitchUser.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                currentOwner = switchTextBox.getText();
+                currentUserLabel.setText(currentOwner);
+                asyncQueryApptBook();
+            }
+        });
+
+        tabPanel.addSelectionHandler(new SelectionHandler<Integer>() {
+            @Override
+            public void onSelection(SelectionEvent<Integer> selectionEvent) {
+                // If you select the search tab and if there is something written there, do the search.
+                if (selectionEvent.getSelectedItem() == 1) {
+                    if (startTextBoxSearch.getText() != "" && endTextBoxSearch.getText() != "") {
+                        asyncSearchAppts();
+                    }
+                }
+                // Otherwise, just query the current state of the user's appointment book
+                else {
+                    asyncQueryApptBook();
+                }
+            }
+        });
     }
 
+    /**
+     * Helper function for checking exceptions
+     *
+     * @param throwable The expection that was thrown.
+     */
+    private void checkThrowable(Throwable throwable) {
+        if (throwable instanceof IllegalArgumentException) {
+            alerter.alert("Your date formatting is incorrect. Dates must be in the format MM/dd/yyyy hh:mm aa");
+        }
+        else {
+            alerter.alert(throwable.getMessage());
+        }
+    }
+
+    /**
+     * Display a window prompt for the user's name. GWT widgets are overpowered for such a simple task.
+     *
+     * @return The user's name.
+     */
     public static native String prompt() /*-{
         var name = null;
         while (name === null) {
@@ -162,11 +219,30 @@ public class AppointmentBookGwt implements EntryPoint {
         asyncQueryApptBook();
     }
 
+    /**
+     * Get the current user's AppointmentBook and display its pretty-printed version on screen.
+     */
     private void asyncQueryApptBook() {
         asyncService.getAppointmentBook(currentOwner, new AsyncCallback<AppointmentBook>() {
             @Override
             public void onFailure(Throwable throwable) {
-                alerter.alert(throwable.getMessage());
+                checkThrowable(throwable);
+            }
+
+            @Override
+            public void onSuccess(AppointmentBook appointmentBook) {
+                addAppointmentBookToTextArea(appointmentBook);
+            }
+        });
+    }
+
+    private void asyncSearchAppts() {
+        String start = startTextBoxSearch.getText();
+        String end = endTextBoxSearch.getText();
+        asyncService.searchAppointments(currentOwner, start, end, new AsyncCallback<AppointmentBook>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                checkThrowable(throwable);
             }
 
             @Override
@@ -177,12 +253,15 @@ public class AppointmentBookGwt implements EntryPoint {
     }
 
     private void addAppointmentBookToTextArea(AppointmentBook apptBook) {
-        if (apptBook == null) return;
+        if (apptBook == null) {
+            textArea.setText("Hello " + currentOwner + ", you do not have an appointment book yet. Add an appointment " +
+                    "to create one.");
+            textArea.setCharacterWidth(textArea.getText().length());
+        }
         Collection<Appointment> appointments = apptBook.getAppointments();
-        if (appointments == null || appointments.size() == 0) return;
+        if (appointments == null) return;
         int size = appointments.size();
         String prettyString = PrettyPrinter.getPrettyString(apptBook);
-        //textArea.setVisibleLines(prettyString.length() - prettyString.replace("\n", "").length());
         textArea.setVisibleLines(40);
         int longest = 0;
         for (String s : prettyString.split("\n")) {

@@ -15,14 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PingServiceImpl extends RemoteServiceServlet implements PingService
 {
 
+    // The intention here is to make this okay to use in real-life
     ConcurrentHashMap<String, AppointmentBook> apptBookMap = new ConcurrentHashMap<>();
 
-    @Override
-    public AppointmentBook ping() {
-        AppointmentBook book = new AppointmentBook("Erik");
-        book.addAppointment(new Appointment("asdf","11/11/2016 9:00 am","11/11/2016 11:00 am"));
-        return book;
-    }
 
     @Override
     public AppointmentBook getAppointmentBook(String owner) {
@@ -36,12 +31,13 @@ public class PingServiceImpl extends RemoteServiceServlet implements PingService
     }
 
     @Override
-    public boolean addAppointment(String owner, String description, String beginTime, String endTime) {
+    public boolean addAppointment(String owner, String description, String beginTime, String endTime) throws IllegalArgumentException{
         if (owner == null) return false;
 
         apptBookMap.putIfAbsent(owner, new AppointmentBook(owner));
         AppointmentBook book = apptBookMap.get(owner);
 
+        // The constructor for Appointment will throw an IllegalArgumentException if the times are in the wrong format.
         book.addAppointment(new Appointment(description,beginTime,endTime));
         return true;
     }

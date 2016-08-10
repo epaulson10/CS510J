@@ -3,14 +3,10 @@ package edu.pdx.cs410J.erik.client;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * The client-side interface to the ping asyncService
+ * The client-side interface to the AppointmentBook service.
  */
 public interface PingServiceAsync {
 
-  /**
-   * Return the current date/time on the server
-   */
-  void ping(AsyncCallback<AppointmentBook> async);
 
   void getAppointmentBook(String owner, AsyncCallback<AppointmentBook> async);
 
