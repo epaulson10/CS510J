@@ -24,7 +24,7 @@ public class AppointmentBookGwtIT extends GWTTestCase {
     final CapturingAlerter alerter = new CapturingAlerter();
 
     AppointmentBookGwt ui = new AppointmentBookGwt(alerter);
-    click(ui.button);
+    click(ui.submitNewAppointment);
 
     Timer verify = new Timer() {
       @Override

@@ -14,11 +14,6 @@ public class PingServiceImplTest extends GWTTestCase{
 
     PingServiceImpl service = new PingServiceImpl();
 
-    public void testPingReturnsExpectedAirline() {
-        AppointmentBook airline = service.ping();
-        assertThat(airline.getAppointments().size(), equalTo(1));
-    }
-
     public void testCreateAppointmentBookCreatesEmptyApptBook (){
         service.createAppointmentBook("Johnny");
 
