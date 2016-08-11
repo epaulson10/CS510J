@@ -3,33 +3,53 @@ package edu.pdx.cs410J.erik.server;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.pdx.cs410J.erik.client.Appointment;
 import edu.pdx.cs410J.erik.client.AppointmentBook;
-import edu.pdx.cs410J.erik.client.PingService;
+import edu.pdx.cs410J.erik.client.AppointmentBookService;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The server-side implementation of the division service
+ * The server-side implementation of the AppointmentBook service
  */
-public class PingServiceImpl extends RemoteServiceServlet implements PingService
+public class AppointmentBookServiceImpl extends RemoteServiceServlet implements AppointmentBookService
 {
 
     // The intention here is to make this okay to use in real-life
     ConcurrentHashMap<String, AppointmentBook> apptBookMap = new ConcurrentHashMap<>();
 
 
+    /**
+     * Get an appointment book by owner
+     *
+     * @param owner The owner of the desired {@link edu.pdx.cs410J.erik.client.AppointmentBook}
+     * @return The {@link edu.pdx.cs410J.erik.client.AppointmentBook} in question.
+     */
     @Override
     public AppointmentBook getAppointmentBook(String owner) {
         if (null == owner) return null;
         return apptBookMap.get(owner);
     }
 
+    /**
+     * Create an {@link edu.pdx.cs410J.erik.client.AppointmentBook} for the given owner.
+     * @param owner
+     */
     @Override
     public void createAppointmentBook(String owner) {
         apptBookMap.putIfAbsent(owner, new AppointmentBook(owner));
     }
 
+    /**
+     * Add an {@link edu.pdx.cs410J.erik.client.Appointment} to someone's {@link edu.pdx.cs410J.erik.client.AppointmentBook}
+     *
+     * @param owner The owner of the AppointmentBook
+     * @param description The appointment description
+     * @param beginTime The start time of the appointment
+     * @param endTime The end time of the appointment
+     * @return true on success, false otherwise.
+     * @throws IllegalArgumentException
+     */
     @Override
     public boolean addAppointment(String owner, String description, String beginTime, String endTime) throws IllegalArgumentException{
         if (owner == null) return false;
@@ -42,8 +62,18 @@ public class PingServiceImpl extends RemoteServiceServlet implements PingService
         return true;
     }
 
+
+    /**
+     * Search someone's {@link edu.pdx.cs410J.erik.client.AppointmentBook} by time.
+     * @param owner The owner of the AppointmentBook
+     * @param beginTime The start of the search time.
+     * @param endTime The end of the search time.
+     * @return An {@link edu.pdx.cs410J.erik.client.AppointmentBook} containing all appointments that fall within those
+     * two times.
+     * @throws IllegalArgumentException
+     */
     @Override
-    public AppointmentBook searchAppointments(String owner, String beginTime, String endTime) {
+    public AppointmentBook searchAppointments(String owner, String beginTime, String endTime) throws IllegalArgumentException {
         AppointmentBook book = getAppointmentBook(owner);
 
         Collection<Appointment> apptCollection = book.getAppointments();

@@ -10,9 +10,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PingServiceImplTest extends GWTTestCase{
+public class AppointmentBookServiceImplTest extends GWTTestCase{
 
-    PingServiceImpl service = new PingServiceImpl();
+    AppointmentBookServiceImpl service = new AppointmentBookServiceImpl();
 
     public void testCreateAppointmentBookCreatesEmptyApptBook (){
         service.createAppointmentBook("Johnny");

@@ -17,14 +17,18 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * A basic GWT class that makes sure that we can send an appointment book back from the server
+ * The implementation for the AppointmentBook user interface
  */
 public class AppointmentBookGwt implements EntryPoint {
     private final Alerter alerter;
     private final String CURR_USER = "Current user: ";
+    private final String README = "<h2><u>Project 5: A fully featured rich internet application</u></h2><br/>" +
+            "This project features a GWT-based application capable of storing and accessing appointment<br/>" +
+            "books remotely on a server. Through simple text fields, the user may view, add to, and search his or her<br/>" +
+            "appointment book. The application supports multiple users as well.";
     String currentOwner;
 
-    PingServiceAsync asyncService;
+    AppointmentBookServiceAsync asyncService;
 
     @VisibleForTesting
     TextArea textArea;
@@ -34,6 +38,8 @@ public class AppointmentBookGwt implements EntryPoint {
     VerticalPanel addPanel;
     VerticalPanel searchPanel;
     VerticalPanel switchUserPanel;
+    VerticalPanel readmePanel;
+    HTML readme;
 
     Label descriptionLabelAdd;
     TextBox descriptionTextBoxAdd;
@@ -66,20 +72,24 @@ public class AppointmentBookGwt implements EntryPoint {
     AppointmentBookGwt(Alerter alerter) {
         this.alerter = alerter;
 
-        asyncService = GWT.create(PingService.class);
+        asyncService = GWT.create(AppointmentBookService.class);
 
         addWidgets();
         addHandlers();
     }
 
+    /**
+     * Create and add widgets to various panels.
+     */
     private void addWidgets() {
-
-
         textArea = new TextArea();
         tabPanel = new TabPanel();
         addPanel = new VerticalPanel();
         searchPanel = new VerticalPanel();
         switchUserPanel = new VerticalPanel();
+        readmePanel = new VerticalPanel();
+        readme = new HTML(README);
+        readmePanel.add(readme);
 
         descriptionLabelAdd = new Label("Description: ");
         descriptionTextBoxAdd = new TextBox();
@@ -123,6 +133,9 @@ public class AppointmentBookGwt implements EntryPoint {
         switchUserPanel.add(submitSwitchUser);
     }
 
+    /**
+     * This method is responsible for adding event handlers to various objects.
+     */
     private void addHandlers() {
         submitNewAppointment.addClickHandler(new ClickHandler() {
             @Override
@@ -193,7 +206,8 @@ public class AppointmentBookGwt implements EntryPoint {
     }
 
     /**
-     * Display a window prompt for the user's name. GWT widgets are overpowered for such a simple task.
+     * Display a window prompt for the user's name. GWT widgets are overpowered for such a simple task. The extension
+     * of the JNI is a very cool feature.
      *
      * @return The user's name.
      */
@@ -214,6 +228,7 @@ public class AppointmentBookGwt implements EntryPoint {
         tabPanel.add(addPanel, "Add appointment");
         tabPanel.add(searchPanel, "Search appointments");
         tabPanel.add(switchUserPanel, "Switch user");
+        tabPanel.add(readmePanel, "README");
         tabPanel.selectTab(0);
         rootPanel.add(textArea);
         asyncQueryApptBook();
@@ -236,6 +251,9 @@ public class AppointmentBookGwt implements EntryPoint {
         });
     }
 
+    /**
+     * Call the service's search functionality and handle any errors.
+     */
     private void asyncSearchAppts() {
         String start = startTextBoxSearch.getText();
         String end = endTextBoxSearch.getText();
@@ -252,11 +270,17 @@ public class AppointmentBookGwt implements EntryPoint {
         });
     }
 
+    /**
+     * A helper function for displaying the appointments on-screen
+     *
+     * @param apptBook The {@link edu.pdx.cs410J.erik.client.AppointmentBook} to display.
+     */
     private void addAppointmentBookToTextArea(AppointmentBook apptBook) {
         if (apptBook == null) {
             textArea.setText("Hello " + currentOwner + ", you do not have an appointment book yet. Add an appointment " +
                     "to create one.");
             textArea.setCharacterWidth(textArea.getText().length());
+            return;
         }
         Collection<Appointment> appointments = apptBook.getAppointments();
         if (appointments == null) return;

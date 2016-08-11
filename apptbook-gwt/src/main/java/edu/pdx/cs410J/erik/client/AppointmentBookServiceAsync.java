@@ -5,7 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 /**
  * The client-side interface to the AppointmentBook service.
  */
-public interface PingServiceAsync {
+public interface AppointmentBookServiceAsync {
 
 
   void getAppointmentBook(String owner, AsyncCallback<AppointmentBook> async);

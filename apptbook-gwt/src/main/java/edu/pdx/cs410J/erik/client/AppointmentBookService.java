@@ -6,8 +6,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 /**
  * A GWT remote asyncService that interacts with remote {@link edu.pdx.cs410J.erik.client.AppointmentBook AppointmentBooks}
  */
-@RemoteServiceRelativePath("ping")
-public interface PingService extends RemoteService {
+@RemoteServiceRelativePath("appointments")
+public interface AppointmentBookService extends RemoteService {
 
   public AppointmentBook getAppointmentBook(String owner);
 
